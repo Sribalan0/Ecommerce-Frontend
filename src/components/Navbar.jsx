@@ -1,28 +1,37 @@
 import React, { useEffect, useState } from "react";
-import Home from "./Home";
+import { useLocation } from "react-router-dom"; 
 import axios from "axios";
 
 const Navbar = ({ onSelectCategory, onSearch }) => {
+  const location = useLocation();
+  const hideNavbarRoutes = ["/login", "/"];
+
+  // Hide Navbar on login and register pages
+  if (hideNavbarRoutes.includes(location.pathname)) {
+    return null;
+  }
+
   const getInitialTheme = () => {
     const storedTheme = localStorage.getItem("theme");
     return storedTheme ? storedTheme : "light-theme";
   };
+
   const [selectedCategory, setSelectedCategory] = useState("");
   const [theme, setTheme] = useState(getInitialTheme());
   const [input, setInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [noResults, setNoResults] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
-  const [showSearchResults,setShowSearchResults] = useState(false)
+  const [showSearchResults, setShowSearchResults] = useState(false);
+
   useEffect(() => {
     fetchData();
   }, []);
 
-  const fetchData = async (value) => {
+  const fetchData = async () => {
     try {
       const response = await axios.get("http://localhost:8080/api/products");
       setSearchResults(response.data);
-      console.log(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -31,17 +40,16 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
   const handleChange = async (value) => {
     setInput(value);
     if (value.length >= 1) {
-      setShowSearchResults(true)
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/api/products/search?keyword=${value}`
-      );
-      setSearchResults(response.data);
-      setNoResults(response.data.length === 0);
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error searching:", error);
-    }
+      setShowSearchResults(true);
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/api/products/search?keyword=${value}`
+        );
+        setSearchResults(response.data);
+        setNoResults(response.data.length === 0);
+      } catch (error) {
+        console.error("Error searching:", error);
+      }
     } else {
       setShowSearchResults(false);
       setSearchResults([]);
@@ -53,13 +61,8 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
     setSelectedCategory(category);
     onSelectCategory(category);
   };
-  //const toggleTheme = () => {
-   // const newTheme = theme === "dark-theme" ? "light-theme" : "dark-theme";
-   // setTheme(newTheme);
-    //localStorage.setItem("theme", newTheme);
-  //};
 
- useEffect(() => {
+  useEffect(() => {
     document.body.className = theme;
   }, [theme]);
 
@@ -70,14 +73,15 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
     "Electronics",
     "Toys",
     "Fashion",
+    "Stationary",
   ];
+
   return (
     <>
       <header>
-        <nav className="navbar navbar-expand-lg fixed-top">
+        <nav className="navbar navbar-expand-lg fixed-top ">
           <div className="container-fluid">
-              <h1><align item="center">Sri's CART</align></h1>
-
+            <h1>Sri's CART</h1>
             <button
               className="navbar-toggler"
               type="button"
@@ -89,14 +93,10 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
             >
               <span className="navbar-toggler-icon"></span>
             </button>
-            <div
-              className="collapse navbar-collapse"
-              id="navbarSupportedContent"
-            >
-              
+            <div className="collapse navbar-collapse" id="navbarSupportedContent">
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 <li className="nav-item">
-                  <a className="nav-link active" aria-current="page" href="/">
+                  <a className="nav-link active" aria-current="page" href="/Home">
                     Home
                   </a>
                 </li>
@@ -105,7 +105,6 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
                     Add Product
                   </a>
                 </li>
-
                 <li className="nav-item dropdown">
                   <a
                     className="nav-link dropdown-toggle"
@@ -116,34 +115,24 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
                   >
                     Categories
                   </a>
-
                   <ul className="dropdown-menu">
                     {categories.map((category) => (
                       <li key={category}>
-                        <button
-                          className="dropdown-item"
-                          onClick={() => handleCategorySelect(category)}
-                        >
+                        <button className="dropdown-item" onClick={() => handleCategorySelect(category)}>
                           {category}
                         </button>
                       </li>
                     ))}
                   </ul>
                 </li>
-                <h3><marquee direction="right">50% off today on toys!!!!</marquee></h3>
-
-                <li className="nav-item"></li>
+                <h3>
+                  <marquee direction="right">50% off today on toys!!!!</marquee>
+                </h3>
               </ul>
               <div className="d-flex align-items-center cart">
                 <a href="/cart" className="nav-link text-dark">
-                  <i
-                    className="bi bi-cart me-2"
-                    style={{ display: "flex", alignItems: "center" }}
-                  >
-                    Cart
-                  </i>
+                  <i className="bi bi-cart me-2">Cart</i>
                 </a>
-                {/* <form className="d-flex" role="search" onSubmit={handleSearch} id="searchForm"> */}
                 <input
                   className="form-control me-2"
                   type="search"
@@ -151,31 +140,24 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
                   aria-label="Search"
                   value={input}
                   onChange={(e) => handleChange(e.target.value)}
-                  onFocus={() => setSearchFocused(true)} // Set searchFocused to true when search bar is focused
-                  onBlur={() => setSearchFocused(false)} // Set searchFocused to false when search bar loses focus
+                  onFocus={() => setSearchFocused(true)}
+                  onBlur={() => setSearchFocused(false)}
                 />
                 {showSearchResults && (
                   <ul className="list-group">
-                    {searchResults.length > 0 ? (  
-                        searchResults.map((result) => (
-                          <li key={result.id} className="list-group-item">
-                            <a href={`/product/${result.id}`} className="search-result-link">
+                    {searchResults.length > 0 ? (
+                      searchResults.map((result) => (
+                        <li key={result.id} className="list-group-item">
+                          <a href={`/product/${result.id}`} className="search-result-link">
                             <span>{result.name}</span>
-                            </a>
-                          </li>
-                        ))
+                          </a>
+                        </li>
+                      ))
                     ) : (
-                      noResults && (
-                        <p className="no-results-message">
-                          No Product with such Name
-                        </p>
-                      )
+                      noResults && <p className="no-results-message">No Product with such Name</p>
                     )}
                   </ul>
                 )}
-                {}
-                {}
-                <div />
               </div>
             </div>
           </div>

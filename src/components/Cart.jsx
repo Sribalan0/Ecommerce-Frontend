@@ -122,10 +122,12 @@ const Cart = () => {
   return (
     <div className="cart-container">
       <div className="shopping-cart">
-        <div className="title">Shopping Bag</div>
+        <div className="title"><h3>Cart</h3></div>
         {cartItems.length === 0 ? (
           <div className="empty" style={{ textAlign: "left", padding: "2rem" }}>
-            <h4>Your cart is empty</h4>
+            <h3 >Your cart is empty</h3>
+            <img src="cart.png"alt="centered image"style={{ width: '250px', height: '300px' }}></img>
+
           </div>
         ) : (
           <>

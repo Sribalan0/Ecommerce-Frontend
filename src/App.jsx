@@ -10,11 +10,15 @@ import { AppProvider } from "./Context/Context";
 import UpdateProduct from "./components/UpdateProduct";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from "./components/Login";
+import Register from "./components/Register";
+import CustomerDetails from "./components/Customerdetails";
+
+
 
 
 function App() {
+    
   const [cart, setCart] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
 
@@ -35,16 +39,17 @@ function App() {
     } else {
       setCart([...cart, { ...product, quantity: 1 }]);
     }
+  
   };
 
   return (
     <AppProvider>
       <BrowserRouter>
-        <Navbar onSelectCategory={handleCategorySelect}
-         />
+        <Navbar onSelectCategory={handleCategorySelect}  />
         <Routes>
+       
           <Route
-            path="/"
+            path="/home"
             element={
               <Home addToCart={addToCart} selectedCategory={selectedCategory}
               />
@@ -56,6 +61,10 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/product/update/:id" element={<UpdateProduct />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Register />} />
+          <Route path="/customerdetails" element={<CustomerDetails/>} />
+          
+
         </Routes>
       </BrowserRouter>
     </AppProvider>

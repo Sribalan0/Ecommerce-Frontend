@@ -1,64 +1,65 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';  // Import useNavigate
-import './App.css';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
+import "./Login.css";
+import bgImage from "../assets/login.avif";
 
-const SignupPage = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const navigate = useNavigate();  // Initialize navigate hook
+function Register() {
+  const [user, setUser] = useState({ gmail: "", password: "" });
+  const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUser({ ...user, [name]: value });
+  };
 
-        // Check if passwords match
-        if (password !== confirmPassword) {
-            alert("Passwords do not match")
-            return;
-        }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:8080/api/register", user);
 
-        // Simulating successful signup
-        alert(`Account created successfully for ${email}`);
+      if (response.data === "User already exists") {
+        alert("User already exists. Please login.");
+      } else {
+        alert("User registered successfully!");
+        navigate("/login");
+      }
+    } catch (error) {
+      alert("Registration failed: " + (error.response?.data || "Please try again later."));
+    }
+  };
 
-
-        // Redirect to login page after signup
-        navigate('/login');
-    };
-
-    return (
-        <div className="login-container" style={{ backgroundImage: 'url(${bgImage})' }}>
-            <div className="login-box">
-                <h1>Register</h1>
-                <form onSubmit={handleSubmit}>
-                    <input
-                        type="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                    <input
-                        type="password"
-                        placeholder="Confirm Password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        required
-                    />
-                    <button type="submit">Register</button>
-                </form>
-                <div className="links">
-                    <p>Already have an account? <a href="/login">Login</a></p>
-                </div>
-            </div>
+  return (
+    <div className="login-container" style={{ backgroundImage: `url(${bgImage})` }}>
+      <div className="login-box">
+        <h2>Register</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="email"
+            name="gmail"
+            placeholder="Enter Gmail"
+            value={user.gmail}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Enter password"
+            value={user.password}
+            onChange={handleChange}
+            required
+          />
+          <button type="submit">Register</button>
+        </form>
+        <div className="links">
+          <p>
+            Already have an account? <Link to="/login">Login</Link>
+          </p>
         </div>
-    );
-};
+      </div>
+    </div>
+  );
+}
 
-export default SignupPage;
+export default Register;

@@ -61,13 +61,13 @@ const Home = ({ selectedCategory }) => {
       <div
         className="grid"
         style={{
-          marginTop: "60px",
+          marginTop: "85px",
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
           gap: "20px",
           padding: "20px",
           backgroundImage: 'url("back.jpg")',
-          backgroundSize: 'cover', 
+          backgroundSize: 'cover',
         }}
       >
         {filteredProducts.length === 0 ? (
@@ -86,7 +86,7 @@ const Home = ({ selectedCategory }) => {
             const { id, brand, name, price, productAvailable, imageUrl } =
               product;
             const cardStyle = {
-              width: "18rem",
+              width: "15rem",
               height: "12rem",
               boxShadow: "rgba(0, 0, 0, 0.24) 0px 2px 3px",
               backgroundColor: productAvailable ? "#fff" : "#ccc",
@@ -95,11 +95,11 @@ const Home = ({ selectedCategory }) => {
               <div
                 className="card mb-3"
                 style={{
-                  width: "250px",
-                  height: "300px",
+                  width: "200px",
+                  height: "380px",
                   boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
                   borderRadius: "10px",
-                  overflow: "hidden", 
+                  overflow: "hidden",
                   backgroundColor: productAvailable ? "#fff" : "#ccc",
                   display: "flex",
                   flexDirection: "column",
@@ -116,12 +116,12 @@ const Home = ({ selectedCategory }) => {
                     src={imageUrl}
                     alt={name}
                     style={{
-                      width: "100%",
-                      height: "100px", 
+                      width: "90%",
+                      height: "160px",
                       objectFit: "cover",  
                       padding: "5px",
                       margin: "2",
-                      borderRadius: "10px 10px 10px 10px", 
+                      borderRadius: "10px 10px 10px 10px",
                     }}
                   />
                   <div
@@ -152,7 +152,7 @@ const Home = ({ selectedCategory }) => {
                     <div className="home-cart-price">
                       <h5
                         className="card-text"
-                        style={{ fontWeight: "600", fontSize: "1.1rem",marginBottom:'5px' }}
+                        style={{ fontWeight: "600", fontSize: "1.1rem",marginBottom:'6px' }}
                       >
                         <i class="bi bi-currency-rupee"></i>
                         {price}
@@ -160,7 +160,7 @@ const Home = ({ selectedCategory }) => {
                     </div>
                     <button
                       className="btn-hover color-9"
-                      style={{margin:'10px 25px 0px '  }}
+                      style={{margin:'0px 0px 0px '  }}
                       onClick={(e) => {
                         e.preventDefault();
                         addToCart(product);
@@ -168,7 +168,7 @@ const Home = ({ selectedCategory }) => {
                       disabled={!productAvailable}
                     >
                       {productAvailable ? "Add to Cart" : "Out of Stock"}
-                    </button> 
+                    </button>
                   </div>
                 </Link>
               </div>
@@ -181,3 +181,4 @@ const Home = ({ selectedCategory }) => {
 };
 
 export default Home;
+
